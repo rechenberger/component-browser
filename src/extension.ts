@@ -1,12 +1,10 @@
 'use strict';
 import * as vscode from 'vscode';
-import { ComponentBrowser } from "./init";
+import { ComponentBrowser } from "./component-browser";
 
 export function activate(context: vscode.ExtensionContext) {
 
-  new ComponentBrowser()
-
-  console.log('Congratulations, your extension "component-browser" is now active!')
+  const cb = new ComponentBrowser()
 
   let disposable = vscode.commands.registerCommand('extension.cb.init', () => {
     // Does Nothing
