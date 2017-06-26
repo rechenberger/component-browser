@@ -22,7 +22,7 @@ export class ComponentBrowser {
       .then(components => this.components = components)
       .then(data => console.log(data))
 
-    vscode.window.showInformationMessage('Done');
+    vscode.window.showInformationMessage('Components Initialized');
   }
 
   getAllFilePaths() {

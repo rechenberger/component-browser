@@ -11,7 +11,7 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.cb.init"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
