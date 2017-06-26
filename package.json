@@ -37,7 +37,7 @@
         "@types/mocha": "^2.2.32"
     },
     "dependencies": {
-        "handlebars": "^4.0.10",
-        "lodash": "^4.17.4"
+        "lodash": "^4.17.4",
+        "mkdirp": "^0.5.1"
     }
 }
