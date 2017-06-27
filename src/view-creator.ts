@@ -27,7 +27,7 @@ export class ViewCreator {
           <span class="title">${c.name}</span>
         </a>
       `
-    }).join()
+    }).join('')
     html += `</div>`
 
     html += this.getCss()
@@ -51,7 +51,7 @@ export class ViewCreator {
 
   openView(filePath) {
     const uri = "file://" + filePath;
-    vscode.commands.executeCommand('vscode.previewHtml', uri)
+    vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.One, "Component Browser")
   }
 
   copyPlaceholder() {
@@ -59,28 +59,8 @@ export class ViewCreator {
   }
 
   getCss() {
-    const css = `
-      .components {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap = wrap;
-}
-
-.component {
-  width: 25%;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.component img {
-  width: 100%;
-}
-    `
+    const cssPath = nodepath.join(__dirname, "..", "..", "assets", "style.css")
+    const css = fs.readFileSync(cssPath)
 
     return `
       <style>${css}</style>
