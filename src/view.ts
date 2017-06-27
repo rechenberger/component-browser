@@ -5,11 +5,13 @@ import { config } from "./config";
 import * as nodepath from "path";
 import * as mkdirp from "mkdirp";
 import * as vscode from 'vscode';
+import { getFilePath, getFolderPath, writeFile } from "./file";
 
 export class ComponentBrowserView {
   constructor(
     private components: Component[]
   ) {
+    mkdirp.sync(getFolderPath())
     this.createView()
     this.copyPlaceholder()
   }
@@ -17,11 +19,11 @@ export class ComponentBrowserView {
   createView() {
     let html = this.getHtml()
     html += this.getCss()
-    this.writeFile(html)
+    writeFile("index.html", html)
   }
 
   open() {
-    const uri = "file://" + this.getFilePath();
+    const uri = "file://" + getFilePath("index.html");
     vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.One, "Component Browser")
   }
 
@@ -50,29 +52,9 @@ export class ComponentBrowserView {
     `
   }
 
-  writeFile(html) {
-    mkdirp.sync(this.getFolderPath())
-    fs.writeFileSync(this.getFilePath(), html)
-  }
-
-  getFolderPath() {
-    return nodepath.join(
-      vscode.workspace.rootPath,
-      config.folderName
-    )
-  }
-
-  getFilePath(filename = "index.html") {
-    return nodepath.join(
-      this.getFolderPath(),
-      filename
-    )
-  }
-
-
   copyPlaceholder() {
     const placeholder = this.readAsset('placeholder.png')
-    fs.writeFileSync(this.getFilePath('placeholder.png'), placeholder)
+    writeFile('placeholder.png', placeholder)
   }
 
   readAsset(asset) {

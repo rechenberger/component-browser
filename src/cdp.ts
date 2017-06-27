@@ -7,7 +7,7 @@ const url = 'https://kolibri-29df0.firebaseapp.com/'
 const format = 'png'
 const viewportWidth = 1440
 const viewportHeight = 900
-const delay = 0
+const delay = 2000
 const userAgent = false
 const fullPage = false
 
@@ -69,7 +69,6 @@ export function startCDP() {
           buffer
         }
         obs.next(data)
-        // file.writeFile('output.png', buffer, 'base64')
       }, delay);
     });
   }).on('error', err => {
