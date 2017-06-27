@@ -14,7 +14,7 @@ body {
 
 .component {
   width: calc(33% - 16px);
-  color: white;
+  color: rgba(255,255,255,0.8);
   text-decoration: none;
   display: flex;
   flex-direction: column;
