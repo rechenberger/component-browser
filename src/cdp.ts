@@ -1,19 +1,21 @@
-import * as CDP from 'chrome-remote-interface';
-const argv:any = {}
-import * as file from 'fs';
+import * as CDP from 'chrome-remote-interface'
+import * as file from 'fs'
+import { Observable } from "rx-node";
 
-// CLI Args
-const url = argv.url || 'https://localhost:4200';
-const format = argv.format === 'jpeg' ? 'jpeg' : 'png';
-const viewportWidth = argv.viewportWidth || 1440;
-const viewportHeight = argv.viewportHeight || 900;
-const delay = argv.delay || 0;
-const userAgent = argv.userAgent;
-const fullPage = argv.full;
+// Args
+const url = 'https://kolibri-29df0.firebaseapp.com/'
+const format = 'png'
+const viewportWidth = 1440
+const viewportHeight = 900
+const delay = 0
+const userAgent = false
+const fullPage = false
 
 export function startCDP() {
   // Start the Chrome Debugging Protocol
-  return CDP(async function (client) {
+  return  new Observable((obs) => {
+    
+    CDP(async function (client) {
     // Extract used DevTools domains.
     const { DOM, Emulation, Network, Page, Runtime } = client;
 
@@ -62,18 +64,19 @@ export function startCDP() {
       setTimeout(async function () {
         const screenshot = await Page.captureScreenshot({ format });
         const buffer = new Buffer(screenshot.data, 'base64');
-        file.writeFile('output.png', buffer, 'base64', function (err) {
-          if (err) {
-            console.error(err);
-          } else {
-            console.log('Screenshot saved');
-          }
-          client.close();
-        });
+        const data = {
+          screenshot,
+          buffer
+        }
+        obs.next(data)
+        // file.writeFile('output.png', buffer, 'base64')
       }, delay);
     });
   }).on('error', err => {
     console.error('Cannot connect to browser:', err);
   });
+
+  })
+  
 }
 

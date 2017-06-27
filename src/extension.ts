@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   let disposable = vscode.commands.registerCommand('extension.cb.open', () => {
     cb.open()
-    startCDP()
+    // startCDP()
   })
 
   context.subscriptions.push(disposable)

@@ -40,6 +40,6 @@
         "chrome-remote-interface": "^0.23.3",
         "lodash": "^4.17.4",
         "mkdirp": "^0.5.1",
-        "rxjs": "^5.4.1"
+        "rx-node": "^1.0.2"
     }
 }

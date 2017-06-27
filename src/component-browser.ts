@@ -1,3 +1,4 @@
+import { ComponentBrowserCrawler } from './crawler';
 import { ComponentBrowserView } from './view';
 'use strict';
 import * as vscode from 'vscode';
@@ -17,11 +18,14 @@ export class ComponentBrowser {
   view:ComponentBrowserView
 
   constructor() {
-    this.initComponents();
+    this.initComponents()
+      .then(() => new ComponentBrowserCrawler(this.components))
+
+    
   }
 
   initComponents() {
-    this.getAllFilePaths()
+    return this.getAllFilePaths()
       .then(paths => _.map(paths, p => this.parsePath(p)))
       .then(components => this.components = components)
       .then(() => {
