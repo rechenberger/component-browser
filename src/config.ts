@@ -1,5 +1,5 @@
 export const config = {
-  folderName: '.component-browser',
+  folderName: '.vscode/component-browser',
   ending: `.component.ts`,
   searchString: null,
   excludeString: `**/node_modules/**`,
