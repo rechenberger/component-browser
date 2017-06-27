@@ -11,6 +11,7 @@ export class ComponentBrowserView {
     private components: Component[]
   ) {
     this.createView()
+    this.copyPlaceholder()
   }
 
   createView() {
@@ -33,7 +34,7 @@ export class ComponentBrowserView {
     html += _.map(this.components, c => {
       return `
         <a href="${c.path}" class="component">
-          <img class="preview" src="https://www.sketchappsources.com/resources/source-image/material_card_thanasis.png">
+          <img class="preview" src="placeholder.png">
           <span class="title">${c.name}</span>
         </a>
       `
@@ -43,19 +44,14 @@ export class ComponentBrowserView {
   }
 
   getCss() {
-    const cssPath = nodepath.join(__dirname, "..", "..", "assets", "style.css")
-    const css = fs.readFileSync(cssPath)
-
+    const css = this.readAsset("style.css")
     return `
       <style>${css}</style>
     `
   }
 
   writeFile(html) {
-    const folderPath = 
-
     mkdirp.sync(this.getFolderPath())
-    
     fs.writeFileSync(this.getFilePath(), html)
   }
 
@@ -66,10 +62,21 @@ export class ComponentBrowserView {
     )
   }
 
-  getFilePath() {
+  getFilePath(filename = "index.html") {
     return nodepath.join(
       this.getFolderPath(),
-      "index.html"
+      filename
     )
+  }
+
+
+  copyPlaceholder() {
+    const placeholder = this.readAsset('placeholder.png')
+    fs.writeFileSync(this.getFilePath('placeholder.png'), placeholder)
+  }
+
+  readAsset(asset) {
+    const path = nodepath.join(__dirname, "..", "..", "assets", asset)
+    return fs.readFileSync(path)
   }
 }
