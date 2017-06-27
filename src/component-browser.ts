@@ -3,11 +3,7 @@ import { ComponentBrowserView } from './view';
 import * as vscode from 'vscode';
 import * as _ from 'lodash'
 import * as nodepath from "path";
-
-const ending = `.component.ts`
-const searchString = `**/*${ending}`
-const excludeString = `**/node_modules/**`
-const selectorPrefix = `app-`
+import { config } from "./config";
 
 export interface Component {
   path:string,
@@ -35,14 +31,14 @@ export class ComponentBrowser {
   }
 
   getAllFilePaths() {
-    return vscode.workspace.findFiles(searchString, excludeString)
+    return vscode.workspace.findFiles(config.searchString, config.excludeString)
       .then(files => files.map(f => f.path))
   }
 
   parsePath(path) {
     const p = nodepath.parse(path)
-    const name = p.base.replace(ending, '')
-    const selector = selectorPrefix + name;
+    const name = p.base.replace(config.ending, '')
+    const selector = config.selectorPrefix + name;
     return {
       path,
       name,
