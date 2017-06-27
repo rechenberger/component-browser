@@ -17,9 +17,9 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.cb.init",
-                "title": "Component Browser Init",
-                "key": "alt+shift+i"
+                "command": "extension.cb.open",
+                "title": "Open Component Browser",
+                "key": "cmd+alt+p"
             }
         ]
     },

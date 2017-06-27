@@ -6,8 +6,8 @@ export function activate(context: vscode.ExtensionContext) {
 
   const cb = new ComponentBrowser()
 
-  let disposable = vscode.commands.registerCommand('extension.cb.init', () => {
-    // Does Nothing
+  let disposable = vscode.commands.registerCommand('extension.cb.open', () => {
+    cb.open();
   })
 
   context.subscriptions.push(disposable)

@@ -1,4 +1,4 @@
-import { ViewCreator } from './view-creator';
+import { ComponentBrowserView } from './view';
 'use strict';
 import * as vscode from 'vscode';
 import * as _ from 'lodash'
@@ -18,6 +18,7 @@ export interface Component {
 export class ComponentBrowser {
 
   components = []
+  view:ComponentBrowserView
 
   constructor() {
     this.initComponents();
@@ -28,7 +29,7 @@ export class ComponentBrowser {
       .then(paths => _.map(paths, p => this.parsePath(p)))
       .then(components => this.components = components)
       .then(() => {
-        new ViewCreator(this.components);
+        this.view = new ComponentBrowserView(this.components);
       })
 
   }
@@ -47,6 +48,10 @@ export class ComponentBrowser {
       name,
       selector
     };
+  }
+
+  open() {
+    this.view.open()
   }
 
 

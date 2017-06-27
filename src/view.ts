@@ -6,15 +6,25 @@ import * as nodepath from "path";
 import * as mkdirp from "mkdirp";
 import * as vscode from 'vscode';
 
-export class ViewCreator {
+export class ComponentBrowserView {
   constructor(
     private components: Component[]
   ) {
-    this.copyPlaceholder()
     this.createView()
   }
 
   createView() {
+    let html = this.getHtml()
+    html += this.getCss()
+    this.writeFile(html)
+  }
+
+  open() {
+    const uri = "file://" + this.getFilePath();
+    vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.One, "Component Browser")
+  }
+
+  getHtml() {
     let html = `
       <h1>Component Browser</h1>
     `;
@@ -29,33 +39,7 @@ export class ViewCreator {
       `
     }).join('')
     html += `</div>`
-
-    html += this.getCss()
-
-    const folderPath = nodepath.join(
-      vscode.workspace.rootPath,
-      config.folderName
-    )
-
-    mkdirp.sync(folderPath)
-
-    const filePath = nodepath.join(
-      folderPath,
-      "index.html"
-    )
-    
-    fs.writeFileSync(filePath, html)
-
-    this.openView(filePath)
-  }
-
-  openView(filePath) {
-    const uri = "file://" + filePath;
-    vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.One, "Component Browser")
-  }
-
-  copyPlaceholder() {
-    console.log(__dirname);
+    return html
   }
 
   getCss() {
@@ -65,5 +49,27 @@ export class ViewCreator {
     return `
       <style>${css}</style>
     `
+  }
+
+  writeFile(html) {
+    const folderPath = 
+
+    mkdirp.sync(this.getFolderPath())
+    
+    fs.writeFileSync(this.getFilePath(), html)
+  }
+
+  getFolderPath() {
+    return nodepath.join(
+      vscode.workspace.rootPath,
+      config.folderName
+    )
+  }
+
+  getFilePath() {
+    return nodepath.join(
+      this.getFolderPath(),
+      "index.html"
+    )
   }
 }
