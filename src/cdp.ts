@@ -1,6 +1,6 @@
 import * as CDP from 'chrome-remote-interface'
 import * as file from 'fs'
-import { Observable } from "rx-node";
+import { Observable } from "rxjs"
 
 // Args
 const url = 'https://kolibri-29df0.firebaseapp.com/'
@@ -13,7 +13,7 @@ const fullPage = false
 
 export function startCDP() {
   // Start the Chrome Debugging Protocol
-  return  new Observable((obs) => {
+  return Observable.create((obs) => {
     
     CDP(async function (client) {
     // Extract used DevTools domains.
