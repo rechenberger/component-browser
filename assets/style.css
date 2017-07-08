@@ -13,7 +13,7 @@ body {
 }
 
 .component {
-  width: calc(33% - 16px);
+  width: calc(25% - 16px);
   color: rgba(255,255,255,0.8);
   text-decoration: none;
   display: flex;
@@ -25,6 +25,7 @@ body {
   -moz-transition: transform 0.2s ease;
   transition: transform 0.2s ease;
   transform: scale(1.0);
+  position: realtive;
 }
 
 .component:hover {
@@ -33,6 +34,16 @@ body {
 
 .component img {
   width: 100%;
+}
+
+.component .original {
+  filter: brightness(50%)
+}
+
+.component .clipped {
+  position: absolute;
+  width: 100%;
+  top: 0;
 }
   
 .component span {

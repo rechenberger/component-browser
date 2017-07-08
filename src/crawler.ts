@@ -81,6 +81,7 @@ export class ComponentBrowserCrawler {
   }
 
   async getBoxModel(client, nodeId) {
+    // console.log("checking", nodeId)
     const { DOM } = client;
     try {
       // Get Box
@@ -89,18 +90,24 @@ export class ComponentBrowserCrawler {
 
       // Return if box has Size      
       if (this.boxHasSize(box)) return box;
+      // console.log("has no box, looking for children");
 
       // Try to get first child
-      const firstChild = DOM.querySelector({
+      const firstChild = await DOM.querySelector({
         selector: ':first-child',
         nodeId
       })
       if (!firstChild || !firstChild.nodeId) return null
+      // console.log('foundChild');
       // return the child's size
       return await this.getBoxModel(client, firstChild.nodeId)
     } catch (error) {
+      if (error.message == "Could not compute box model.") {
+        return "box-error";
+      }
       console.log("error", error)
-      return "error";
+      return "error"
+
     }
     // const firstChild: any = DOM.requestChildNodes({ nodeId })
   }
@@ -109,6 +116,8 @@ export class ComponentBrowserCrawler {
     if (!box) return false;
     if (!box.width) return false;
     if (!box.height) return false;
+    // if (!box.content) return false;
+    // if (!box.content.length) return false;
     return true;
   }
 }

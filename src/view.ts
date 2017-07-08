@@ -28,9 +28,28 @@ export class ComponentBrowserView {
 
     html += `<div class="components">`
     html += _.map(this.components, c => {
+      let style = ''
+      if (c.box) {
+        const coords = _.map(c.box.content, (pixel, index) => {
+          const hundredPercent = (index % 2) ? config.viewportHeight : config.viewportWidth
+          const percent = pixel / hundredPercent
+          return `${(percent) * 100}%`
+        })
+        const coordString = _.map(coords, (c, i) => {
+          let s = c + '';
+          if ((i < coords.length - 1)) {
+            if ((i % 2) == 1) s += ','
+            s += ' '
+          }
+          return s
+        }).join('')
+        const clipPath = `polygon(${coordString})`
+        style += `clip-path: ${clipPath};`
+      }
       return `
         <a href="${c.path}" class="component">
-          <img class="preview" src="${this.getScreenshotUrl(c)}">
+          <img class="preview original" src="${this.getScreenshotUrl(c)}">
+          <img class="preview clipped" src="${this.getScreenshotUrl(c)}" style="${style}">
           <span class="title">${c.name}</span>
         </a>
       `
