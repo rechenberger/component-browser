@@ -6,6 +6,9 @@ import * as _ from 'lodash'
 
 
 export class ComponentBrowserCrawler {
+
+  screenshotId: string
+
   constructor(
     private components: Component[]
   ) {
@@ -17,19 +20,24 @@ export class ComponentBrowserCrawler {
     console.log('this.components', this.components);
 
     startCDP()
-      .do((client) => console.log('client'))
+      .do((client) => console.log('got client'))
+
+      // TODO: Multiple Times for Route Changes etc.
+      .do(() => this.screenshotId = Date.now().toString())
+
+      // Wait for page to load
       .delay(config.delay)
 
       // Find Components
       .switchMap(client => this.findComponents(client))
+
       // Save Components
-      .do(() => console.log("save now"))
       .do(() => writeFile('components.json', JSON.stringify(this.components, null, 2)))
+      .do(() => console.log("saved components"))
 
       // Make and Save Screenshot
       .switchMap(client => this.makeScreenshot(client))
-      .do(data => writeFile('output.png', data.buffer, 'base64'))
-
+      .do(data => writeFile(`/screenshot-${this.screenshotId}.png`, data.buffer, 'base64'))
 
       .subscribe(() => null)
   }
@@ -49,8 +57,6 @@ export class ComponentBrowserCrawler {
     const DOM = client.DOM;
     const { root: { nodeId: documentNodeId } } = await DOM.getDocument();
 
-    console.log("got doc")
-
     return Promise.all(_.map(this.components, async (component: Component) => {
 
       const compNode = await DOM.querySelector({
@@ -63,8 +69,9 @@ export class ComponentBrowserCrawler {
       if (!compNodeId) return
 
       const box = await this.getBoxModel(client, compNodeId)
-      console.log('box', component.selector, this.boxHasSize(box));
+      // console.log('box', component.selector, this.boxHasSize(box));
       component.box = box;
+      component.screenshotId = this.screenshotId;
 
     })).then(() => client)
   }

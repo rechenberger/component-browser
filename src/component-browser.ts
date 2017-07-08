@@ -10,7 +10,8 @@ export interface Component {
   path: string,
   name: string,
   selector: string,
-  box?: any
+  box?: any,
+  screenshotId?: string
 }
 
 export class ComponentBrowser {
