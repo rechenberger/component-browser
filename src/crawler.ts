@@ -8,6 +8,7 @@ import * as _ from 'lodash'
 export class ComponentBrowserCrawler {
 
   screenshotId: string
+  client: any
 
   constructor(
     private components: Component[]
@@ -20,6 +21,7 @@ export class ComponentBrowserCrawler {
     console.log('this.components', this.components);
 
     return startCDP()
+      .do((client) => this.client = client)
       .do((client) => console.log('got client'))
 
       // TODO: Multiple Times for Route Changes etc.
@@ -29,26 +31,26 @@ export class ComponentBrowserCrawler {
       .delay(config.delay)
 
       // Find Components
-      .switchMap(client => this.findComponents(client))
+      .switchMap(() => this.findComponents())
 
       // Save Components
       .do(() => writeFile('components.json', JSON.stringify(this.components, null, 2)))
       .do(() => console.log("saved components"))
 
       // Make and Save Screenshot
-      .switchMap(client => this.makeScreenshot(client))
+      .switchMap(() => this.makeScreenshot())
       .do(data => writeFile(`screenshots/${this.screenshotId}.png`, data.buffer, 'base64'))
 
     // .subscribe(() => null)
   }
 
-  async makeScreenshot(client) {
+  async makeScreenshot() {
     // Force Viewport
-    await client.Emulation.setVisibleSize({ width: config.viewportWidth, height: config.viewportHeight });
+    await this.client.Emulation.setVisibleSize({ width: config.viewportWidth, height: config.viewportHeight });
     // await client.Emulation.forceViewport({ x: 0, y: 0, scale: 1 });
 
     const format = config.format
-    const screenshot = await client.Page.captureScreenshot({ format });
+    const screenshot = await this.client.Page.captureScreenshot({ format });
     const buffer = new Buffer(screenshot.data, 'base64');
     const data = {
       screenshot,
@@ -57,8 +59,8 @@ export class ComponentBrowserCrawler {
     return data;
   }
 
-  async findComponents(client) {
-    const DOM = client.DOM;
+  async findComponents() {
+    const DOM = this.client.DOM;
     const { root: { nodeId: documentNodeId } } = await DOM.getDocument();
 
     return Promise.all(_.map(this.components, async (component: Component) => {
@@ -72,17 +74,17 @@ export class ComponentBrowserCrawler {
 
       if (!compNodeId) return
 
-      const box = await this.getBoxModel(client, compNodeId)
+      const box = await this.getBoxModel(compNodeId)
       // console.log('box', component.selector, this.boxHasSize(box));
       component.box = box;
       component.screenshotId = this.screenshotId;
 
-    })).then(() => client)
+    }))
   }
 
-  async getBoxModel(client, nodeId) {
+  async getBoxModel(nodeId) {
     // console.log("checking", nodeId)
-    const { DOM } = client;
+    const { DOM } = this.client;
     try {
       // Get Box
       const boxModel = await DOM.getBoxModel({ nodeId })
@@ -100,7 +102,7 @@ export class ComponentBrowserCrawler {
       if (!firstChild || !firstChild.nodeId) return null
       // console.log('foundChild');
       // return the child's size
-      return await this.getBoxModel(client, firstChild.nodeId)
+      return await this.getBoxModel(firstChild.nodeId)
     } catch (error) {
       if (error.message == "Could not compute box model.") {
         return "box-error";
