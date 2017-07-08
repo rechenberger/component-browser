@@ -7,12 +7,17 @@ export function activate(context: vscode.ExtensionContext) {
 
   const cb = new ComponentBrowser()
 
-  let disposable = vscode.commands.registerCommand('extension.cb.open', () => {
-    cb.open()
-    // startCDP()
-  })
+  context.subscriptions.push(
+    vscode.commands.registerCommand('extension.cb.open', () => {
+      cb.open()
+    })
+  )
 
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(
+    vscode.commands.registerCommand('extension.cb.crawl', () => {
+      cb.crawl()
+    })
+  )
 }
 
 export function deactivate() {

@@ -20,6 +20,11 @@
                 "command": "extension.cb.open",
                 "title": "Open Component Browser",
                 "key": "cmd+alt+p"
+            },
+            {
+                "command": "extension.cb.crawl",
+                "title": "Crawl Component Browser",
+                "key": "cmd+alt+o"
             }
         ]
     },

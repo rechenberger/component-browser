@@ -12,14 +12,14 @@ export class ComponentBrowserCrawler {
   constructor(
     private components: Component[]
   ) {
-    this.start()
+    // this.start()
   }
 
   start() {
 
     console.log('this.components', this.components);
 
-    startCDP()
+    return startCDP()
       .do((client) => console.log('got client'))
 
       // TODO: Multiple Times for Route Changes etc.
@@ -39,7 +39,7 @@ export class ComponentBrowserCrawler {
       .switchMap(client => this.makeScreenshot(client))
       .do(data => writeFile(`screenshots/${this.screenshotId}.png`, data.buffer, 'base64'))
 
-      .subscribe(() => null)
+    // .subscribe(() => null)
   }
 
   async makeScreenshot(client) {

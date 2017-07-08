@@ -12,7 +12,6 @@ export class ComponentBrowserView {
     private components: Component[]
   ) {
     mkdirp.sync(getFolderPath())
-    this.createView()
     this.copyPlaceholder()
   }
 
@@ -36,7 +35,7 @@ export class ComponentBrowserView {
     html += _.map(this.components, c => {
       return `
         <a href="${c.path}" class="component">
-          <img class="preview" src="placeholder.png">
+          <img class="preview" src="${this.getScreenshotUrl(c)}">
           <span class="title">${c.name}</span>
         </a>
       `
@@ -60,5 +59,11 @@ export class ComponentBrowserView {
   readAsset(asset) {
     const path = nodepath.join(__dirname, "..", "..", "assets", asset)
     return fs.readFileSync(path)
+  }
+
+  getScreenshotUrl(component: Component) {
+    console.log('component', component);
+    if (!component.screenshotId) return "placeholder.png"
+    return getFilePath(`screenshots/${component.screenshotId}.png`)
   }
 }

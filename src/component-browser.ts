@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { ComponentBrowserCrawler } from './crawler';
 import { ComponentBrowserView } from './view';
 'use strict';
@@ -18,13 +19,24 @@ export class ComponentBrowser {
 
   components = []
   view: ComponentBrowserView
+  crawler: ComponentBrowserCrawler
 
   constructor() {
-    this.initComponents()
-      .then(() => new ComponentBrowserCrawler(this.components))
+
+  }
+
+  crawl() {
+    Observable.fromPromise(this.initComponents())
+      .switchMap(() => {
+        this.crawler = new ComponentBrowserCrawler(this.components)
+        return this.crawler.start()
+      })
+      .do(() => this.view.createView())
+      .subscribe(() => null)
   }
 
   initComponents() {
+    // TODO: get old component data from json
     return this.getAllFilePaths()
       .then(paths => _.map(paths, p => this.parsePath(p)))
       .then(components => this.components = components)
