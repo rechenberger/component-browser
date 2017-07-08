@@ -7,21 +7,19 @@ import * as nodepath from "path";
 import { config } from "./config";
 
 export interface Component {
-  path:string,
-  name:string,
-  selector:string
+  path: string,
+  name: string,
+  selector: string
 }
 
 export class ComponentBrowser {
 
   components = []
-  view:ComponentBrowserView
+  view: ComponentBrowserView
 
   constructor() {
     this.initComponents()
       .then(() => new ComponentBrowserCrawler(this.components))
-
-    
   }
 
   initComponents() {

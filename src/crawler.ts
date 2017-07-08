@@ -5,7 +5,7 @@ import { writeFile } from "./file";
 
 export class ComponentBrowserCrawler {
   constructor(
-    private components:Component[]
+    private components: Component[]
   ) {
     this.start()
   }
