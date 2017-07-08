@@ -62,7 +62,6 @@ export class ComponentBrowserView {
   }
 
   getScreenshotUrl(component: Component) {
-    console.log('component', component);
     if (!component.screenshotId) return "placeholder.png"
     return getFilePath(`screenshots/${component.screenshotId}.png`)
   }
