@@ -37,7 +37,7 @@ export class ComponentBrowserCrawler {
 
       // Make and Save Screenshot
       .switchMap(client => this.makeScreenshot(client))
-      .do(data => writeFile(`/screenshot-${this.screenshotId}.png`, data.buffer, 'base64'))
+      .do(data => writeFile(`screenshots/${this.screenshotId}.png`, data.buffer, 'base64'))
 
       .subscribe(() => null)
   }

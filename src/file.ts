@@ -6,8 +6,23 @@ import * as nodepath from "path";
 import * as mkdirp from "mkdirp";
 import * as vscode from 'vscode';
 
-export function writeFile(name, content, encoding="utf-8") {
-  fs.writeFileSync(this.getFilePath(name), content, encoding)
+export function writeFile(name, content, encoding = "utf-8") {
+  const parts = name.split('/')
+
+  if (parts.length > 1) {
+    const file = parts.pop();
+    mkdir(parts)
+  }
+
+  const path = getFilePath(name)
+  fs.writeFileSync(path, content, encoding)
+}
+
+export function mkdir(path: any[]) {
+  mkdirp.sync(nodepath.join(
+    getFolderPath(),
+    ...path
+  ));
 }
 
 export function getFolderPath() {
@@ -19,7 +34,7 @@ export function getFolderPath() {
 
 export function getFilePath(filename = "index.html") {
   return nodepath.join(
-    this.getFolderPath(),
+    getFolderPath(),
     filename
   )
 }
