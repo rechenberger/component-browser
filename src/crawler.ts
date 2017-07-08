@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Component } from './component-browser';
 import { startCDP } from "./cdp";
 import { writeFile } from "./file";
@@ -25,10 +26,8 @@ export class ComponentBrowserCrawler {
       .do((client) => console.log('got client'))
 
       // TODO: Multiple Times for Route Changes etc.
+      .switchMap(() => Observable.interval(config.delay))
       .do(() => this.screenshotId = Date.now().toString())
-
-      // Wait for page to load
-      .delay(config.delay)
 
       // Find Components
       .switchMap(() => this.findComponents())
