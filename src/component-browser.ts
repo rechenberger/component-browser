@@ -9,7 +9,8 @@ import { config } from "./config";
 export interface Component {
   path: string,
   name: string,
-  selector: string
+  selector: string,
+  box?: any
 }
 
 export class ComponentBrowser {

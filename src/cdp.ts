@@ -41,30 +41,33 @@ export function startCDP() {
       Page.loadEventFired(async () => {
         // If the `full` CLI option was passed, we need to measure the height of
         // the rendered page and use Emulation.setVisibleSize
-        if (config.fullPage) {
-          const { root: { nodeId: documentNodeId } } = await DOM.getDocument();
-          const { nodeId: bodyNodeId } = await DOM.querySelector({
-            selector: 'body',
-            nodeId: documentNodeId,
-          });
-          const { model: { height } } = await DOM.getBoxModel({ nodeId: bodyNodeId });
+        // if (config.fullPage) {
+        //   const { root: { nodeId: documentNodeId } } = await DOM.getDocument();
+        //   const { nodeId: bodyNodeId } = await DOM.querySelector({
+        //     selector: 'body',
+        //     nodeId: documentNodeId,
+        //   });
+        //   const { model: { height } } = await DOM.getBoxModel({ nodeId: bodyNodeId });
 
-          await Emulation.setVisibleSize({ width: config.viewportWidth, height: height });
-          // This forceViewport call ensures that content outside the viewport is
-          // rendered, otherwise it shows up as grey. Possibly a bug?
-          await Emulation.forceViewport({ x: 0, y: 0, scale: 1 });
-        }
+        //   await Emulation.setVisibleSize({ width: config.viewportWidth, height: height });
+        //   // This forceViewport call ensures that content outside the viewport is
+        //   // rendered, otherwise it shows up as grey. Possibly a bug?
+        //   await Emulation.forceViewport({ x: 0, y: 0, scale: 1 });
+        // }
 
-        setTimeout(async function () {
-          const format = config.format
-          const screenshot = await Page.captureScreenshot({ format });
-          const buffer = new Buffer(screenshot.data, 'base64');
-          const data = {
-            screenshot,
-            buffer
-          }
-          obs.next(data)
-        }, config.delay);
+        // setTimeout(async function () {
+        //   const format = config.format
+        //   const screenshot = await Page.captureScreenshot({ format });
+        //   const buffer = new Buffer(screenshot.data, 'base64');
+        //   const data = {
+        //     screenshot,
+        //     buffer
+        //   }
+        //   obs.next(data)
+        // }, config.delay);
+
+        obs.next(client);
+
       });
     }).on('error', err => {
       console.error('Cannot connect to browser:', err);
