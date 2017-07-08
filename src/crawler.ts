@@ -43,6 +43,10 @@ export class ComponentBrowserCrawler {
   }
 
   async makeScreenshot(client) {
+    // Force Viewport
+    await client.Emulation.setVisibleSize({ width: config.viewportWidth, height: config.viewportHeight });
+    // await client.Emulation.forceViewport({ x: 0, y: 0, scale: 1 });
+
     const format = config.format
     const screenshot = await client.Page.captureScreenshot({ format });
     const buffer = new Buffer(screenshot.data, 'base64');

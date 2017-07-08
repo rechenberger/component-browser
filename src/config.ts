@@ -8,8 +8,8 @@ export const config = {
   // FROM CDP  
   url: 'https://kolibri-29df0.firebaseapp.com/',
   format: 'png',
-  viewportWidth: 1440,
-  viewportHeight: 900,
+  viewportWidth: 375,
+  viewportHeight: 667,
   delay: 2000,
   userAgent: false,
   fullPage: false
