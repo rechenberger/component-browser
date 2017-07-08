@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 import * as _ from 'lodash'
 import * as nodepath from "path";
 import { config } from "./config";
+import { getFilePath } from "./file";
 
 export interface Component {
   path: string,
@@ -22,7 +23,6 @@ export class ComponentBrowser {
   crawler: ComponentBrowserCrawler
 
   constructor() {
-
   }
 
   crawl() {
@@ -63,7 +63,8 @@ export class ComponentBrowser {
   }
 
   open() {
-    this.view.open()
+    const uri = "file://" + getFilePath("index.html");
+    vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.One, "Component Browser")
   }
 
 

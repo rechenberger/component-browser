@@ -21,11 +21,6 @@ export class ComponentBrowserView {
     writeFile("index.html", html)
   }
 
-  open() {
-    const uri = "file://" + getFilePath("index.html");
-    vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.One, "Component Browser")
-  }
-
   getHtml() {
     let html = `
       <h1>Component Browser</h1>
