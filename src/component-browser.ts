@@ -26,21 +26,17 @@ export class ComponentBrowser {
   }
 
   crawl() {
-    Observable.fromPromise(this.initComponents())
+    return Observable.fromPromise(this.initComponents())
       .switchMap(() => {
         this.crawler = new ComponentBrowserCrawler(this.components)
         return this.crawler.start()
       })
       .do(() => this.view.createView())
-      .subscribe(
-      () => null,
-      // error => console.log("probably closed"),
-      error => {
-        if (error.message == "Chrome closed") return
+      .catch(error => {
+        if (error.message == "Chrome closed") return Observable.of(true)
         console.log("error", error);
-      },
-      () => null
-      )
+        return Observable.of(false)
+      })
   }
 
   initComponents() {
