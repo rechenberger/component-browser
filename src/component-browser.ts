@@ -40,7 +40,6 @@ export class ComponentBrowser {
   }
 
   initComponents() {
-    // TODO: get old component data from json
     this.components = this.readComponentsFromFile()
     return this.getAllFilePaths()
       .then(paths => _.map(paths, p => this.parsePath(p)))
