@@ -14,7 +14,7 @@ function makeScreenshot(key) {
     }
 
     function getFlashEl() {
-        return document.querySelector('.component-browser-flash');
+        return document.querySelector(className);
     }
 
     function addStyle(str) {
