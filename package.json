@@ -4,6 +4,9 @@
     "description": "",
     "version": "0.0.1",
     "publisher": "rechenberger",
+    "repository": {
+        "url": "https://github.com/rechenberger/component-browser"
+    },
     "engines": {
         "vscode": "^1.13.0"
     },
