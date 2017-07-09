@@ -3,15 +3,14 @@ import { Observable } from 'rxjs';
 export function inject(client) {
     const { Runtime } = client;
 
-    const first = Observable.fromPromise(firstInject(Runtime));
-    const call = callInjectedFunction(Runtime)
+    const first = Observable.of(true).switchMap(() => firstInject(Runtime));
+    const call = Observable.of(true).switchMap(() => callInjectedFunction(Runtime))
 
     return first
         .switchMap(() => {
             console.log("injected");
             return call
                 .repeat(-1)
-
         })
 }
 
@@ -22,18 +21,11 @@ function firstInject(Runtime) {
 }
 
 function callInjectedFunction(Runtime) {
-    return new Observable(oberver => {
-        const expression = `makeScreenshot('${config.screenshotKey}')`
-        console.log(expression)
-        Runtime.evaluate({
-            expression,
-            awaitPromise: true
-        }).then((data) => {
-            oberver.next()
-            oberver.complete()
-        }).catch((err) => {
-            oberver.error(err)
-        })
+    const expression = `makeScreenshot('${config.screenshotKey}')`
+    console.log(expression)
+    return Runtime.evaluate({
+        expression,
+        awaitPromise: true
     })
 }
 
