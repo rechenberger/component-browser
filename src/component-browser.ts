@@ -44,13 +44,11 @@ export class ComponentBrowser {
     return this.getAllFilePaths()
       .then(paths => _.map(paths, p => this.parsePath(p)))
       .then(newCs => this.mergeComponentLists(this.components, newCs))
-      .then(() => {
-        this.view = new ComponentBrowserView(this.components);
-      })
+      .then(() => this.view = new ComponentBrowserView(this.components))
   }
 
   mergeComponentLists(oldCs, newCs) {
-    _.map(newCs, newC => {
+    _.each(newCs, newC => {
       const oldC = _.find(oldCs, c => c.selector == newC.selector)
 
       // Not Found
