@@ -41,9 +41,14 @@ export function startCDP() {
       Page.loadEventFired(async () => {
 
         obs.next(client);
-        obs.complete();
+        // obs.complete();
 
       });
+
+      client.on("disconnect", () => {
+        console.log("disconnect");
+        obs.error(new Error("Chrome closed"));
+      })
     }).on('error', err => {
       console.error('Cannot connect to browser:', err);
     });
