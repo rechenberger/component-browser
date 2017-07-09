@@ -36,6 +36,7 @@ export class ComponentBrowser {
       () => null,
       // error => console.log("probably closed"),
       error => {
+        if (error.message == "Chrome closed") return
         console.log("error", error);
       },
       () => null

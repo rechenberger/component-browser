@@ -10,9 +10,8 @@ export function inject(client) {
         .switchMap(() => {
             console.log("injected");
             return call
-                // return Observable.of(true)
-                .concat(call)
-                .concat(call)
+                .repeat(-1)
+
         })
 }
 
@@ -24,14 +23,12 @@ function firstInject(Runtime) {
 
 function callInjectedFunction(Runtime) {
     return new Observable(oberver => {
-
         const expression = `makeScreenshot('${config.screenshotKey}')`
-        console.log('expression', expression);
+        console.log(expression)
         Runtime.evaluate({
             expression,
             awaitPromise: true
         }).then((data) => {
-            console.log("data", data);
             oberver.next()
             oberver.complete()
         }).catch((err) => {

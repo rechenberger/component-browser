@@ -146,7 +146,10 @@ export class ComponentBrowserCrawler {
       })
       console.log("Started Chrome")
       observer.next()
-      chrome.addListener('close', (code, signal) => observer.complete())
+      chrome.addListener('exit', (code, signal) => {
+        console.log('chrome closed');
+        observer.error(new Error("Chrome closed"))
+      })
       return () => {
         chrome.kill();
       }
