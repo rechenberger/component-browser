@@ -12,7 +12,8 @@ export const config = {
   viewportHeight: 667,
   delay: 2000,
   userAgent: false,
-  fullPage: false
+  fullPage: false,
+  chromeShellCommand: '"/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" --disable-gpu  --remote-debugging-port=9222'
 }
 
 config.searchString = `**/*${config.ending}`

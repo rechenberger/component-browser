@@ -32,7 +32,11 @@ export class ComponentBrowser {
         return this.crawler.start()
       })
       .do(() => this.view.createView())
-      .subscribe(() => null)
+      .subscribe(
+      () => null,
+      error => console.log("probably closed"),
+      () => null
+      )
   }
 
   initComponents() {

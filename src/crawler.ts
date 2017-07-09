@@ -4,7 +4,7 @@ import { startCDP } from "./cdp";
 import { writeFile } from "./file";
 import { config } from "./config";
 import * as _ from 'lodash'
-
+import { exec } from "child_process";
 
 export class ComponentBrowserCrawler {
 
@@ -21,7 +21,13 @@ export class ComponentBrowserCrawler {
 
     console.log('this.components', this.components);
 
-    return startCDP()
+    return Observable.of(true)
+      // Start Chrome and wait some time until it has started
+      .switchMap(() => this.startChrome())
+      .switchMap(() => Observable.timer(3 * 1000))
+
+      // Start CDP
+      .switchMap(() => startCDP())
       .do((client) => this.client = client)
       .do((client) => console.log('got client'))
 
@@ -120,5 +126,26 @@ export class ComponentBrowserCrawler {
     // if (!box.content) return false;
     // if (!box.content.length) return false;
     return true;
+  }
+
+  startChrome() {
+    return new Observable(observer => {
+      const command = config.chromeShellCommand;
+      const chrome = exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          observer.error(error)
+          return;
+        }
+        // console.log(`stdout: ${stdout}`);
+        // console.log(`stderr: ${stderr}`);
+      })
+      console.log("Started Chrome")
+      observer.next()
+      chrome.addListener('close', (code, signal) => observer.complete())
+      return () => {
+        chrome.kill();
+      }
+    })
   }
 }
