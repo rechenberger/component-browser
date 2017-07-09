@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import * as _ from 'lodash'
 import * as nodepath from "path";
 import { config } from "./config";
-import { getFilePath } from "./file";
+import { getFilePath, readFile } from "./file";
 
 export interface Component {
   path: string,
@@ -41,13 +41,37 @@ export class ComponentBrowser {
 
   initComponents() {
     // TODO: get old component data from json
+    this.components = this.readComponentsFromFile()
     return this.getAllFilePaths()
       .then(paths => _.map(paths, p => this.parsePath(p)))
-      .then(components => this.components = components)
+      .then(newCs => this.mergeComponentLists(this.components, newCs))
       .then(() => {
         this.view = new ComponentBrowserView(this.components);
       })
+  }
 
+  mergeComponentLists(oldCs, newCs) {
+    _.map(newCs, newC => {
+      const oldC = _.find(oldCs, c => c.selector == newC.selector)
+
+      // Not Found
+      if (!oldC) {
+        oldCs.push(newC)
+        return
+      }
+
+      // Found Old Component, Edit it
+      Object.assign(oldC, newC)
+    })
+  }
+
+  readComponentsFromFile() {
+    const path = getFilePath('components.json')
+    try {
+      return require(path)
+    } catch (error) {
+      return []
+    }
   }
 
   getAllFilePaths() {

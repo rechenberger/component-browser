@@ -38,3 +38,8 @@ export function getFilePath(filename = "index.html") {
     filename
   )
 }
+
+export function readFile(filename) {
+  const path = getFilePath(filename)
+  return fs.readFileSync(path)
+}
