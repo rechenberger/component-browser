@@ -10,14 +10,9 @@ export function inject(client) {
         .switchMap(() => {
             console.log("injected");
             return call
-            // return Observable.of(true)
-            // .concat(call)
-            // .concat(call)
-            // .concat(call)
-            // .concat(call)
-            // .concat(call)
-            // .concat(call)
-            // .concat(call)
+                // return Observable.of(true)
+                .concat(call)
+                .concat(call)
         })
 }
 
@@ -109,6 +104,7 @@ function makeScreenshot(key) {
             opacity: 0;
             left: 0;
             top: 0;
+            pointer-events: none;
         }
 
         .${className}.active {
@@ -117,7 +113,7 @@ function makeScreenshot(key) {
         }
     `);
 
-    return new window.__zone_symbol__Promise((res, rej) => {
+    return new (window as any).__zone_symbol__Promise((res, rej) => {
         resolve = res;
         document.addEventListener('keydown', keyPressed)
     })
