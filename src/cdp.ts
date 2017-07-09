@@ -41,6 +41,7 @@ export function startCDP() {
       Page.loadEventFired(async () => {
 
         obs.next(client);
+        obs.complete();
 
       });
     }).on('error', err => {

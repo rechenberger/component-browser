@@ -5,6 +5,7 @@ import { writeFile, getAllFilesInFolder, deleteFile } from "./file";
 import { config } from "./config";
 import * as _ from 'lodash'
 import { exec } from "child_process";
+import { inject } from "./injector";
 
 export class ComponentBrowserCrawler {
 
@@ -32,7 +33,8 @@ export class ComponentBrowserCrawler {
       .do((client) => console.log('got client'))
 
       // TODO: Multiple Times for Route Changes etc.
-      .switchMap(() => Observable.interval(config.delay))
+      // .switchMap(() => Observable.interval(config.delay))
+      .switchMap(() => inject(this.client))
       .do(() => this.screenshotId = Date.now().toString())
 
       // Find Components

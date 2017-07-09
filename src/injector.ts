@@ -1,3 +1,51 @@
+import { config } from './config';
+import { Observable } from 'rxjs';
+export function inject(client) {
+    const { Runtime } = client;
+
+    const first = Observable.fromPromise(firstInject(Runtime));
+    const call = callInjectedFunction(Runtime)
+
+    return first
+        .switchMap(() => {
+            console.log("injected");
+            return call
+            // return Observable.of(true)
+            // .concat(call)
+            // .concat(call)
+            // .concat(call)
+            // .concat(call)
+            // .concat(call)
+            // .concat(call)
+            // .concat(call)
+        })
+}
+
+function firstInject(Runtime) {
+    return Runtime.evaluate({
+        expression: `${makeScreenshot}`
+    })
+}
+
+function callInjectedFunction(Runtime) {
+    return new Observable(oberver => {
+
+        const expression = `makeScreenshot('${config.screenshotKey}')`
+        console.log('expression', expression);
+        Runtime.evaluate({
+            expression,
+            awaitPromise: true
+        }).then((data) => {
+            console.log("data", data);
+            oberver.next()
+            oberver.complete()
+        }).catch((err) => {
+            oberver.error(err)
+        })
+    })
+}
+
+// Injected Stuff
 function makeScreenshot(key) {
     let resolve;
     const className = `${makeid()}-flash`;
@@ -69,7 +117,7 @@ function makeScreenshot(key) {
         }
     `);
 
-    return new Promise((res, rej) => {
+    return new window.__zone_symbol__Promise((res, rej) => {
         resolve = res;
         document.addEventListener('keydown', keyPressed)
     })

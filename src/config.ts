@@ -13,7 +13,8 @@ export const config = {
   delay: 2000,
   userAgent: false,
   fullPage: false,
-  chromeShellCommand: '"/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" --disable-gpu  --remote-debugging-port=9222'
+  chromeShellCommand: '"/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome" --disable-gpu  --remote-debugging-port=9222',
+  screenshotKey: 'k'
 }
 
 config.searchString = `**/*${config.ending}`

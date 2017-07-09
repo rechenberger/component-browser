@@ -34,7 +34,10 @@ export class ComponentBrowser {
       .do(() => this.view.createView())
       .subscribe(
       () => null,
-      error => console.log("probably closed"),
+      // error => console.log("probably closed"),
+      error => {
+        console.log("error", error);
+      },
       () => null
       )
   }
