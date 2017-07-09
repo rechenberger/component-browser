@@ -43,3 +43,13 @@ export function readFile(filename) {
   const path = getFilePath(filename)
   return fs.readFileSync(path)
 }
+
+export function getAllFilesInFolder(folder) {
+  const path = getFilePath(folder)
+  return fs.readdirSync(path)
+}
+
+export function deleteFile(filename) {
+  const path = getFilePath(filename)
+  fs.unlinkSync(path)
+}

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Component } from './component-browser';
 import { startCDP } from "./cdp";
-import { writeFile } from "./file";
+import { writeFile, getAllFilesInFolder, deleteFile } from "./file";
 import { config } from "./config";
 import * as _ from 'lodash'
 import { exec } from "child_process";
@@ -45,6 +45,8 @@ export class ComponentBrowserCrawler {
       // Make and Save Screenshot
       .switchMap(() => this.makeScreenshot())
       .do(data => writeFile(`screenshots/${this.screenshotId}.png`, data.buffer, 'base64'))
+
+      .finally(() => this.cleanUp())
 
     // .subscribe(() => null)
   }
@@ -147,5 +149,21 @@ export class ComponentBrowserCrawler {
         chrome.kill();
       }
     })
+  }
+
+  cleanUp() {
+    console.log("cleaning up");
+    const screenshotsUsed = _(this.components)
+      .map(c => c.screenshotId)
+      .uniq()
+      .value()
+
+    const allScreenshots = getAllFilesInFolder('screenshots')
+    _(allScreenshots)
+      .filter(s => {
+        const id = s.split('.png')[0]
+        return !screenshotsUsed.includes(id)
+      })
+      .each(s => deleteFile('screenshots/' + s))
   }
 }
